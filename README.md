@@ -52,17 +52,17 @@ put them into the folder emnlp2017-relation-extraction/resources/glove/.
     You can change the path to word embeddings in the model_params.json file if needed.
 
 
-# Complete the setup above
+Complete the setup above
 
 Run python model_train.py in emnlp2017-relation-extraction/relation_extraction/ to see the list of parameters
 
-Training:
+# Training:
 
 Our Implementation(Bidirectional LSTM model)
 
 If you put the data into the default folders you can train the BidirectionalLSTM model with the following command for
 
-training(from relation_extraction folder)****:
+training(from relation_extraction folder):
 ----------------------------------------------------------------------------------------------------------------------------------
 
 python model_train.py model_BidirectionalLSTM train ../data/wikipedia-wikidata/enwiki-20160501/semantic-graphs-filtered-training.02_06.json ../data/wikipedia-wikidata/enwiki-20160501/semantic-graphs-filtered-validation.02_06.json
