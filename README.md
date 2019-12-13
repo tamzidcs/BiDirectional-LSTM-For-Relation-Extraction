@@ -40,7 +40,9 @@ resources/
 	pip3 install -r requirements.txt
 
 3. Set the Keras (deep learning library) backend to TensorFlow with the following command:
-	export KERAS_BACKEND=tensorflow
+```
+export KERAS_BACKEND=tensorflow
+```
 
 4. Download the data from :				    
 https://www.informatik.tu-darmstadt.de/ukp/research_6/data/lexical_resources/wikipedia_wikidata_relations/
