@@ -22,11 +22,11 @@ data/curves/
 
 
 
-# Wikidata sentence-level relation data set
+Wikidata sentence-level relation data set
 
 Download the data set from the paper here. See the data set ReadMe for more information on the format and see the paper on data set construction.
 
-Setup:
+# Setup:
 
 1. Setup a new pip environment first: http://docs.python-guide.org/en/latest/dev/virtualenvs/
 
