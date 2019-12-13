@@ -10,7 +10,7 @@ as the setup is same.
 https://www.informatik.tu-darmstadt.de/ukp/research_6/data/lexical_resources/wikipedia_wikidata_relations/
 
 Folder Structure:
-
+```
 relation_extraction/
 ├── core
 │   ├── parser.py
