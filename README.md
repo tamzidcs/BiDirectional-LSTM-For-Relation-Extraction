@@ -1,5 +1,5 @@
 
-Setup Instruction for Bidirectional LSTM model based sentence level relation extraction 
+# Setup Instruction for Bidirectional LSTM model based sentence level relation extraction 
 
 
 Please follow original github link(https://github.com/UKPLab/emnlp2017-relation-extraction/blob/master/README.md)  for any confusion 
@@ -54,8 +54,9 @@ Run python model_train.py in emnlp2017-relation-extraction/relation_extraction/ 
 
 Training:
 
-**********Our Implementation(Bidirectional LSTM model)
-# If you put the data into the default folders you can train the BidirectionalLSTM model with the following command for
+Our Implementation(Bidirectional LSTM model)
+
+If you put the data into the default folders you can train the BidirectionalLSTM model with the following command for
 
 training(from relation_extraction folder)****:
 ----------------------------------------------------------------------------------------------------------------------------------
