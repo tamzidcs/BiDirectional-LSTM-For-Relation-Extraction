@@ -69,7 +69,7 @@ Our Implementation(Bidirectional LSTM model)
 
 If you put the data into the default folders you can train the BidirectionalLSTM model with the following command for
 
-training (From relation_extraction folder):
+training (From `/relation_extraction` folder):
 
 ```
 python model_train.py model_BidirectionalLSTM train ../data/wikipedia-wikidata/enwiki-20160501/semantic-graphs-filtered-training.02_06.json ../data/wikipedia-wikidata/enwiki-20160501/semantic-graphs-filtered-validation.02_06.json
