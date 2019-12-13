@@ -65,23 +65,33 @@ If you put the data into the default folders you can train the BidirectionalLSTM
 training(from relation_extraction folder):
 ----------------------------------------------------------------------------------------------------------------------------------
 
+```
 python model_train.py model_BidirectionalLSTM train ../data/wikipedia-wikidata/enwiki-20160501/semantic-graphs-filtered-training.02_06.json ../data/wikipedia-wikidata/enwiki-20160501/semantic-graphs-filtered-validation.02_06.json
 
+```
 
 # Run the following command to compute the precision-recall curves:
 
 
+```
 python precision_recall_curves.py model_BidirectionalLSTM ../data/wikipedia-wikidata/enwiki-20160501/semantic-graphs-filtered-held-out.02_06.json
 
+```
 
 # You can also want to try the Context Weighted Model Similarly run:
 
 Training:
 
+```
 python model_train.py model_ContextWeighted train ../data/wikipedia-wikidata/enwiki-20160501/semantic-graphs-filtered-training.02_06.json ../data/wikipedia-wikidata/enwiki-20160501/semantic-graphs-filtered-validation.02_06.json
 
+```
 For precision-recall curve:
+
+```
 python precision_recall_curves.py model_ContextWeighted ../data/wikipedia-wikidata/enwiki-20160501/semantic-graphs-filtered-held-out.02_06.json
+
+```
 
 # Requirements:
 	Python 3.6
