@@ -1,7 +1,9 @@
-# coding: utf-8
-# Copyright (C) 2016 UKP lab
+# 
+# 
+# This code is a modified version of UKP lab(ukp.tu-darmstadt.de/ukp-home/) source code
+# 
+# We have added a version of LSTM model
 #
-# Author: Daniil Sorokin (ukp.tu-darmstadt.de/ukp-home/)
 #
 import os
 import ast, json
@@ -39,75 +41,43 @@ POSITION_EMBEDDING_MODE = "mark-bi"
 POSITION_VOCAB_SIZE = 5 if POSITION_EMBEDDING_MODE == "mark-bi" and not graph_utils.LEGACY_MODE else 4
 
 
-def model_LSTMbaseline(p, embedding_matrix, max_sent_len, n_out):
+def model_BidirectionalLSTM(p, embedding_matrix, max_sent_len, n_out):
     print("Parameters:", p)
-    # Take sentence encoded as indices and convert it to embeddings
+    
+    # Sentence to Embeddings
     sentence_input = layers.Input(shape=(max_sent_len,), dtype='int32', name='sentence_input')
-    word_embeddings = layers.Embedding(output_dim=embedding_matrix.shape[1], input_dim=embedding_matrix.shape[0],
+    
+    word_emb = layers.Embedding(output_dim=embedding_matrix.shape[1], input_dim=embedding_matrix.shape[0],
                                        input_length=max_sent_len, weights=[embedding_matrix],
                                        mask_zero=True, trainable=False)(sentence_input)
-    word_embeddings = layers.Dropout(p['dropout1'])(word_embeddings)
+    word_emb = layers.Dropout(p['dropout1'])(word_emb)
 
-    # Take token markers that identify entity positions, convert to position embeddings
+    # Entity markers to position embeddings
     entity_markers = layers.Input(shape=(max_sent_len,), dtype='int8', name='entity_markers')
     pos_embeddings = layers.Embedding(output_dim=p['position_emb'], input_dim=POSITION_VOCAB_SIZE, input_length=max_sent_len,
                                       mask_zero=True, embeddings_regularizer=regularizers.l2(), trainable=True)(entity_markers)
 
-    # Merge word and position embeddings and apply the specified amount of RNN layers
-    x = layers.concatenate([word_embeddings, pos_embeddings])
+    # Concate word and position embeddings and apply RNN layers
+    
+    x = layers.concatenate([word_emb, pos_embeddings])
+    
     for i in range(p["rnn1_layers"]-1):
-        lstm_layer = layers.LSTM(p['units1'], return_sequences=True)
-        if p['bidirectional']:
-            lstm_layer = layers.Bidirectional(lstm_layer)
-        x = lstm_layer(x)
+      print("loop....")
+      lstm_layer = layers.LSTM(p['units1'],return_sequences=True)
+      lstm_layer = layers.Bidirectional(lstm_layer)
+      x = lstm_layer(x)
 
     lstm_layer = layers.LSTM(p['units1'], return_sequences=False)
-    if p['bidirectional']:
-        lstm_layer = layers.Bidirectional(lstm_layer)
+    lstm_layer = layers.Bidirectional(lstm_layer)
+    
     sentence_vector = lstm_layer(x)
 
     # Apply softmax
     sentence_vector = layers.Dropout(p['dropout1'])(sentence_vector)
+    
     main_output = layers.Dense(n_out, activation="softmax", name='main_output')(sentence_vector)
 
     model = models.Model(inputs=[sentence_input, entity_markers], outputs=[main_output])
-    model.compile(optimizer=p['optimizer'], loss='categorical_crossentropy', metrics=['accuracy'])
-
-    return model
-
-
-def model_CNN(p, embedding_matrix, max_sent_len, n_out):
-    print("Parameters:", p)
-    # Take sentence encoded as indices split in three parts and convert it to embeddings
-    sentence_input = layers.Input(shape=(max_sent_len,), dtype='int32', name='sentence_input')
-    word_embeddings = layers.Embedding(output_dim=embedding_matrix.shape[1],
-                                       input_dim=embedding_matrix.shape[0],
-                                       input_length=max_sent_len, weights=[embedding_matrix],
-                                       mask_zero=True, trainable=False)(sentence_input)
-    word_embeddings = layers.Dropout(p['dropout1'])(word_embeddings)
-
-    # Take token markers that identify entity positions, convert to position embeddings
-    entity_markers = layers.Input(shape=(2, max_sent_len,), dtype='int8', name='entity_markers')
-
-    pos_embeddings = layers.wrappers.TimeDistributed(layers.Embedding(output_dim=p['position_emb'], input_dim=(max_sent_len*2)+1, input_length=max_sent_len,
-                                                                      mask_zero=False, embeddings_regularizer = regularizers.l2(), trainable=True),  name='pos_embedding')(entity_markers)
-
-    pos_embeddings = layers.Permute((2,1,3))(pos_embeddings)
-    pos_embeddings = layers.Reshape((max_sent_len, p['position_emb']*2))(pos_embeddings)
-
-    # Merge word and position embeddings and apply the specified amount of CNN layers
-    x = layers.concatenate([word_embeddings, pos_embeddings])
-
-    x = MaskedConvolution1D(nb_filter=p['units1'], filter_length=p['window_size'], border_mode='same')(x)
-    sentence_vector = MaskedGlobalMaxPooling1D()(x)
-
-    sentence_vector = layers.Lambda(lambda l: K.tanh(l))(sentence_vector)
-
-    # Apply softmax
-    sentence_vector = layers.Dropout(p['dropout1'])(sentence_vector)
-    main_output = layers.Dense(n_out, activation="softmax", name='main_output')(sentence_vector)
-
-    model = models.Model(input=[sentence_input, entity_markers], output=[main_output])
     model.compile(optimizer=p['optimizer'], loss='categorical_crossentropy', metrics=['accuracy'])
 
     return model
@@ -119,63 +89,6 @@ def masked_categorical_crossentropy(y_true, y_pred):
 
     loss = K.categorical_crossentropy(y_true, y_pred) * mask
     return loss
-
-
-def model_ContextSum(p, embedding_matrix, max_sent_len, n_out):
-    print("Parameters:", p)
-
-    # Take sentence encoded as indices and convert it to embeddings
-    sentence_input = layers.Input(shape=(max_sent_len,), dtype='int32', name='sentence_input')
-    # Repeat the input N times for each edge
-    x = layers.RepeatVector(MAX_EDGES_PER_GRAPH)(sentence_input)
-    word_embeddings = layers.wrappers.TimeDistributed(layers.Embedding(output_dim=embedding_matrix.shape[1], input_dim=embedding_matrix.shape[0],
-                                                                input_length=max_sent_len, weights=[embeddings],
-                                                                mask_zero=True, trainable=False))(x)
-    word_embeddings = layers.Dropout(p['dropout1'])(word_embeddings)
-
-    # Take token markers that identify entity positions, convert to position embeddings
-    entity_markers = layers.Input(shape=(MAX_EDGES_PER_GRAPH, max_sent_len,), dtype='int8', name='entity_markers')
-    pos_embeddings = layers.wrappers.TimeDistributed(layers.Embedding(output_dim=p['position_emb'],
-                                                         input_dim=POSITION_VOCAB_SIZE, input_length=max_sent_len,
-                                                         mask_zero=True, embeddings_regularizer = regularizers.l2(),
-                                                         trainable=True))(entity_markers)
-
-    # Merge word and position embeddings and apply the specified amount of RNN layers
-    for i in range(p["rnn1_layers"]-1):
-        lstm_layer = layers.LSTM(p['units1'], return_sequences=True)
-        if p['bidirectional']:
-            lstm_layer = layers.Bidirectional(lstm_layer)
-        x = layers.wrappers.TimeDistributed(lstm_layer)(x)
-    lstm_layer = layers.LSTM(p['units1'], return_sequences=False)
-    if p['bidirectional']:
-        lstm_layer = layers.Bidirectional(lstm_layer)
-    sentence_matrix = layers.wrappers.TimeDistributed(lstm_layer)(x)
-
-    # Take the vector of the sentences with the target entity pair
-    layers_to_concat = []
-    num_units = p['units1'] * (2 if p['bidirectional'] else 1)
-    for i in range(MAX_EDGES_PER_GRAPH):
-        sentence_vector = layers.Lambda(lambda l: l[:, i], output_shape=(num_units,))(sentence_matrix)
-        if i == 0:
-            context_vectors = layers.Lambda(lambda l: l[:, i+1:], output_shape=(MAX_EDGES_PER_GRAPH-1, num_units))(sentence_matrix)
-        elif i == MAX_EDGES_PER_GRAPH - 1:
-            context_vectors = layers.Lambda(lambda l: l[:, :i], output_shape=(MAX_EDGES_PER_GRAPH-1, num_units))(sentence_matrix)
-        else:
-            context_vectors = layers.Lambda(lambda l: K.concatenate([l[:, :i], l[:, i+1:]], axis=1), output_shape=(MAX_EDGES_PER_GRAPH-1, num_units))(sentence_matrix)
-        context_vector = GlobalSumPooling1D()(context_vectors)
-        edge_vector = layers.concatenate([sentence_vector, context_vector])
-        edge_vector = layers.Reshape((1, num_units * 2))(edge_vector)
-        layers_to_concat.append(edge_vector)
-    edge_vectors = layers.Concatenate(1)(layers_to_concat)
-
-    # Apply softmax
-    edge_vectors = layers.Dropout(p['dropout1'])(edge_vectors)
-    main_output = layers.wrappers.TimeDistributed(layers.Dense(n_out, activation="softmax", name='main_output'))(edge_vectors)
-
-    model = models.Model(inputs=[sentence_input, entity_markers], outputs=[main_output])
-    model.compile(optimizer=p['optimizer'], loss=masked_categorical_crossentropy, metrics=['accuracy'])
-
-    return model
 
 
 def model_ContextWeighted(p, embedding_matrix, max_sent_len, n_out):
