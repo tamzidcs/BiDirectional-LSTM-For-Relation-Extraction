@@ -29,9 +29,12 @@ resources/
 
 The training file:
 `relation_extraction/model_train.py`    
+Training epochs are changed.
+
 The model file:
 `relation_extraction/core/keras_models.py`
 
+model_BidirectionalLSTM  is our implementation.
 BiDirectional LSTM is implemented here as well as the context-aware model from the original paper.
 
 
