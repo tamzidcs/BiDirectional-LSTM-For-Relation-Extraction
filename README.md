@@ -11,10 +11,14 @@ https://www.informatik.tu-darmstadt.de/ukp/research_6/data/lexical_resources/wik
 
 Folder Structure:
 
-relation_extraction/core			------Models for joint relation extraction
-relation_extraction/evaluation			------Evaluation metrics
-resources/	Necessary resources		------resources folder
-data/curves/					------The precision-recall curves for each model on the held out data 
+relation_extraction/core			
+------Models for joint relation extraction
+relation_extraction/evaluation			
+------Evaluation metrics
+resources/	Necessary resources		
+------resources folder
+data/curves/					
+------The precision-recall curves for each model on the held out data 
 
 
 
