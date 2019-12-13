@@ -11,14 +11,19 @@ https://www.informatik.tu-darmstadt.de/ukp/research_6/data/lexical_resources/wik
 
 Folder Structure:
 
-relation_extraction/core			
-------Models for joint relation extraction
-relation_extraction/evaluation			
-------Evaluation metrics
-resources/	Necessary resources		
-------resources folder
-data/curves/					
-------The precision-recall curves for each model on the held out data 
+relation_extraction/
+├── core
+│   ├── parser.py
+│   ├── embeddings.py
+│   ├── entity_extraction.py
+│   └── keras_models.py
+├── stanford_tag_dataset.py
+└── evaluation
+    └── metrics.py
+resources/
+├── properties-with-labels.txt
+└── property_blacklist.txt
+```
 
 
 
