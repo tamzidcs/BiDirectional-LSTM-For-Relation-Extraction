@@ -51,10 +51,10 @@ The data was preprocessed using Stanford Core NLP 3.7.0 models. See stanford_tag
 	
 	
 
-5. Download the GloVe embeddings, glove.6B.zip (https://nlp.stanford.edu/projects/glove/) and 
-put them into the folder emnlp2017-relation-extraction/resources/glove/. 	
+5. Download the GloVe embeddings, glove.6B.zip (https://nlp.stanford.edu/projects/glove/) and 	
+   put them into the folder emnlp2017-relation-extraction/resources/glove/. 	
 	
-    You can change the path to word embeddings in the model_params.json file if needed.
+   You can change the path to word embeddings in the model_params.json file if needed.
 
 
 Complete the setup above
