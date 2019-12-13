@@ -134,7 +134,7 @@ python precision_recall_curves.py model_ContextWeighted ../data/wikipedia-wikida
 	TensorFlow 1.6.0
 
 # Links to models
-Links to models:
+
 
 Context-Weighted 10 epochs:
 https://drive.google.com/file/d/1AuRXUeKllraHv5QCTL7r2tPjKDkzcy0K/view?usp=sharing
