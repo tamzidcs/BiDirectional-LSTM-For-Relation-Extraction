@@ -25,6 +25,24 @@ resources/
 └── property_blacklist.txt
 ```
 
+<table>
+    <tr>
+        <th>File</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>relation_extraction/</td><td>Main Python module</td>
+    </tr>
+    <tr>
+        <td>relation_extraction/core</td><td>Our Model and Context-Aware model</td>
+    </tr>
+    <tr>
+        <td>resources/</td><td>Necessary resources</td>
+    </tr>
+    <tr>
+        <td>data/curves/</td><td>The precision-recall curves for each model on the held out data</td>
+    </tr>
+</table>
+
 # Our Changes:
 
 The training file:
