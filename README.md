@@ -25,6 +25,14 @@ resources/
 └── property_blacklist.txt
 ```
 
+# Our Changes:
+
+The training file:
+`relation_extraction/model_train.py`    
+The model file:
+`relation_extraction/core/keras_models.py`
+
+BiDirectional LSTM is implemented here as well as the context-aware model from the original paper.
 
 
 ### Wikipedia-Wikidata sentence-level relation data set
