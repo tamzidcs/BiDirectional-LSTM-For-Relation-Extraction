@@ -133,7 +133,7 @@ python precision_recall_curves.py model_ContextWeighted ../data/wikipedia-wikida
 	Keras 2.1.5
 	TensorFlow 1.6.0
 
-#Links to models
+# Links to models
 Links to models:
 
 Context-Weighted 10 epochs:
