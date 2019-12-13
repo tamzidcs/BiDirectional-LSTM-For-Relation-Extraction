@@ -61,7 +61,7 @@ The data was preprocessed using Stanford Core NLP 3.7.0 models. See stanford_tag
 
 Complete the setup above
 
-Run python model_train.py in emnlp2017-relation-extraction/relation_extraction/ to see the list of parameters
+Run python model_train.py in `/relation_extraction/` to see the list of parameters
 
 # Training:
 
