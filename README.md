@@ -27,9 +27,9 @@ resources/
 
 
 
-Wikidata sentence-level relation data set
+### Wikipedia-Wikidata sentence-level relation data set
 
-Download the data set from the paper here. See the data set ReadMe for more information on the format and see the paper on data set construction.
+*  Download the data set from the paper [here](https://www.informatik.tu-darmstadt.de/ukp/research_6/data/lexical_resources/wikipedia_wikidata_relations/). See the data set ReadMe for more information on the format and see the [paper](http://aclweb.org/anthology/D17-1188) on data set construction.
 
 # Setup:
 
